@@ -3,7 +3,7 @@ import { validationResult } from "express-validator";
 import InvalidDataError from "../errors/InvalidDataError";
 import UserService from "../services/UserService";
 import { comparePassword } from "../services/helpers/BcryptHelper";
-import { criarJWT } from "../services/helpers/JWTHelper";
+import { createJWT } from "../services/helpers/JWTHelper";
 
 class LoginController {
     async processLogin(req: Request, res: Response, next: NextFunction) {
@@ -36,7 +36,7 @@ class LoginController {
 
             clientData.password = "";
 
-            const token = criarJWT(clientData);
+            const token = createJWT(clientData);
 
             return res.status(200).json({
                 token,

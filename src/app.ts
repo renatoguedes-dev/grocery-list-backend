@@ -2,9 +2,11 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import loginRouter from "./routes/loginRouter";
-import errorHandler from "./middleware/errorHandler";
-import notFoundHandler from "./middleware/notFoundHandler";
+import errorHandler from "./middleware/ErrorHandler";
+import notFoundHandler from "./middleware/NotFoundHandler";
 import signUpRouter from "./routes/signUpRouter";
+import inventoryRouter from "./routes/inventoryRouter";
+import AuthMiddleware from "./middleware/AuthMiddleware";
 
 dotenv.config();
 
@@ -19,6 +21,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api/login", loginRouter);
 
 app.use("/api/signup", signUpRouter);
+
+app.use("/api/inventory", AuthMiddleware, inventoryRouter);
 
 // handle all routes and methods that are not defined in the application
 app.use(notFoundHandler);

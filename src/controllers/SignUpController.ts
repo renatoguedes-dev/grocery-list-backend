@@ -3,6 +3,7 @@ import { validationResult } from "express-validator";
 import UserService from "../services/UserService";
 import ValidationErrorResponse from "../errors/ValidationErrorResponse";
 import UserAlreadyExists from "../errors/UserAlreadyExists";
+import { createJWT } from "../services/helpers/JWTHelper";
 
 class SignUpController {
     async processSignUp(req: Request, res: Response, next: NextFunction) {
@@ -21,7 +22,7 @@ class SignUpController {
             const existingUser = await UserService.findByEmail(email);
 
             if (existingUser?.email) {
-                throw new UserAlreadyExists("User already exists.");
+                throw new UserAlreadyExists("E-mail already registered.");
             }
 
             if (password !== confirmPassword) {
@@ -40,9 +41,12 @@ class SignUpController {
                     .json({ message: "Email already registered." });
             }
 
+            createdUser.password = "";
+
+            const token = createJWT(createdUser);
+
             return res.status(201).json({
-                message: "User created successfully",
-                createdUser,
+                token,
             });
         } catch (error) {
             next(error);

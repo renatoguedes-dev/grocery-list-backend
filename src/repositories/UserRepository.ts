@@ -24,13 +24,13 @@ class UserRepository {
             const query = `
             INSERT INTO users (name, email, password)
             VALUES ($1, $2, $3)
-            returning *
+            RETURNING *
         `;
 
             const values = [userData.name, userData.email, hashedPassword];
 
             const result = await db.query(query, values);
-            console.log(result[0]);
+            
             return result[0];
         } catch (error) {
             throw new InvalidDataError("Email already registered.");
