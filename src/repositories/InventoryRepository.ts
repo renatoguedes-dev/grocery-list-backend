@@ -6,7 +6,7 @@ class InventoryRepository {
         const query = `
             INSERT INTO inventory (user_id, item, current_amount, minimum_amount) 
             VALUES ($1, $2, $3, $4)
-            returning *
+            RETURNING *
         `;
 
         const values = [
@@ -51,9 +51,6 @@ class InventoryRepository {
         ];
 
         const result = await db.query(query, values);
-
-        console.log("result from inventoryRepository.updateItem");
-        console.log(result[0]);
 
         return result[0];
     }

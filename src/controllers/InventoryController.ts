@@ -10,9 +10,7 @@ class InventoryController {
                 user.id
             );
 
-            return res.status(200).json({
-                userInventory,
-            });
+            return res.status(200).json({ userInventory });
         } catch (error) {
             next(error);
         }
@@ -20,9 +18,7 @@ class InventoryController {
 
     async addItem(req: Request, res: Response, next: NextFunction) {
         try {
-            const user = req.body.user;
-
-            const { item, currentAmount, minimumAmount } = req.body;
+            const { user, item, currentAmount, minimumAmount } = req.body;
 
             const itemAdded = await InventoryRepository.addItem({
                 userId: user.id,

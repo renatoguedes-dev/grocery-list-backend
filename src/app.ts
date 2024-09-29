@@ -7,6 +7,7 @@ import notFoundHandler from "./middleware/NotFoundHandler";
 import signUpRouter from "./routes/signUpRouter";
 import inventoryRouter from "./routes/inventoryRouter";
 import AuthMiddleware from "./middleware/AuthMiddleware";
+import listsRouter from "./routes/listsRouter";
 
 dotenv.config();
 
@@ -21,6 +22,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api/login", loginRouter);
 
 app.use("/api/signup", signUpRouter);
+
+app.use("/api/lists", AuthMiddleware, listsRouter)
 
 app.use("/api/inventory", AuthMiddleware, inventoryRouter);
 
