@@ -1,14 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-import InventoryRepository from "../repositories/InventoryRepository";
+import InventoryPrismaRepository from "../repositories/prisma/InventoryPrismaRepository";
 
 class InventoryController {
     async getUserInventory(req: Request, res: Response, next: NextFunction) {
         try {
             const user = req.body.user;
 
-            const userInventory = await InventoryRepository.getUserInventory(
-                user.id
-            );
+            const userInventory =
+                await InventoryPrismaRepository.getUserInventory(user.id);
 
             return res.status(200).json({ userInventory });
         } catch (error) {
@@ -20,7 +19,7 @@ class InventoryController {
         try {
             const { user, item, currentAmount, minimumAmount } = req.body;
 
-            const itemAdded = await InventoryRepository.addItem({
+            const itemAdded = await InventoryPrismaRepository.addItem({
                 userId: user.id,
                 item,
                 currentAmount,
@@ -46,7 +45,7 @@ class InventoryController {
 
             const { currentAmount, minimumAmount } = req.body;
 
-            const updatedItem = await InventoryRepository.updateItem({
+            const updatedItem = await InventoryPrismaRepository.updateItem({
                 userId: user.id,
                 itemId,
                 currentAmount,
@@ -70,7 +69,7 @@ class InventoryController {
 
             const { itemId } = req.body;
 
-            const deletedItem = await InventoryRepository.deleteItem(
+            const deletedItem = await InventoryPrismaRepository.deleteItem(
                 user.id,
                 itemId
             );

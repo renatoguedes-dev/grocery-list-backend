@@ -34,9 +34,13 @@ class LoginController {
             if (!comparisonResult)
                 throw new Error("Invalid e-mail and/or password!");
 
-            clientData.password = "";
+            const userSafeData = {
+                id: clientData.id,
+                name: clientData.name,
+                email: clientData.email,
+            };
 
-            const token = createJWT(clientData);
+            const token = createJWT(userSafeData);
 
             return res.status(200).json({
                 token,

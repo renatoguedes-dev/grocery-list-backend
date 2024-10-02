@@ -1,10 +1,10 @@
 import { CreateUserDto, User } from "../models/User";
-import UserRepository from "../repositories/UserRepository";
+import UserPrismaRepository from "../repositories/prisma/UserPrismaRepository";
 import bcrypt from "bcryptjs";
 
 class UserService {
     async findByEmail(email: string): Promise<User | null> {
-        return UserRepository.findByEmail(email);
+        return UserPrismaRepository.findByEmail(email);
     }
 
     async createUser(userData: CreateUserDto): Promise<User | undefined> {
@@ -15,7 +15,7 @@ class UserService {
                 saltRounds
             );
 
-            return UserRepository.createUser(userData, hashedPassword);
+            return UserPrismaRepository.createUser(userData, hashedPassword);
         } catch (err: any) {
             throw new Error(err);
         }

@@ -1,13 +1,13 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { User } from "../../models/User";
+import { UserSafeData } from "../../models/User";
 import InvalidJWT from "../../errors/InvalidJWT";
 
 dotenv.config();
 
 const secret = process.env.JWT_SECRET;
 
-export const createJWT = (payload: User) => {
+export const createJWT = (payload: UserSafeData) => {
     if (!secret)
         throw new Error(
             "JWT_SECRET is not defined in the environment variables."

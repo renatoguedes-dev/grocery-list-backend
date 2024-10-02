@@ -41,9 +41,13 @@ class SignUpController {
                     .json({ message: "Email already registered." });
             }
 
-            createdUser.password = "";
+            const userSafeData = {
+                id: createdUser.id,
+                name: createdUser.name,
+                email: createdUser.email,
+            };
 
-            const token = createJWT(createdUser);
+            const token = createJWT(userSafeData);
 
             return res.status(201).json({
                 token,

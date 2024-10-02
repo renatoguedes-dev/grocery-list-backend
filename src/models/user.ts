@@ -3,11 +3,18 @@ export interface User {
     name: string;
     email: string;
     password: string;
-    created_at: Date;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface CreateUserDto {
     name: string;
     email: string;
     password: string;
+}
+
+export interface UserSafeData {
+    id: string;
+    name: string;
+    email: string;
 }
