@@ -1,89 +1,100 @@
 import { NextFunction, Request, Response } from "express";
 import InventoryPrismaRepository from "../repositories/prisma/InventoryPrismaRepository";
+import { validationResult } from "express-validator";
 
 class InventoryController {
-    async getUserInventory(req: Request, res: Response, next: NextFunction) {
-        try {
-            const user = req.body.user;
+  async getUserInventory(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user = req.body.user;
 
-            const userInventory =
-                await InventoryPrismaRepository.getUserInventory(user.id);
+      const userInventory = await InventoryPrismaRepository.getUserInventory(
+        user.id
+      );
 
-            return res.status(200).json({ userInventory });
-        } catch (error) {
-            next(error);
-        }
+      return res.status(200).json({ userInventory });
+    } catch (error) {
+      next(error);
     }
+  }
 
-    async addItem(req: Request, res: Response, next: NextFunction) {
-        try {
-            const { user, item, currentAmount, minimumAmount } = req.body;
+  async addItem(req: Request, res: Response, next: NextFunction) {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
 
-            const itemAdded = await InventoryPrismaRepository.addItem({
-                userId: user.id,
-                item,
-                currentAmount,
-                minimumAmount,
-            });
+      const { user, item, currentAmount, minimumAmount } = req.body;
 
-            if (!itemAdded)
-                throw new Error(
-                    "Something went wrong while adding the new item."
-                );
+      const itemAdded = await InventoryPrismaRepository.addItem({
+        userId: user.id,
+        item,
+        currentAmount,
+        minimumAmount,
+      });
 
-            return res.status(200).json({ success: true, itemAdded });
-        } catch (error) {
-            next(error);
-        }
+      if (!itemAdded)
+        throw new Error("Something went wrong while adding the new item.");
+
+      return res.status(200).json({ success: true, itemAdded });
+    } catch (error) {
+      next(error);
     }
+  }
 
-    async updateItem(req: Request, res: Response, next: NextFunction) {
-        try {
-            const user = req.body.user;
+  async updateItem(req: Request, res: Response, next: NextFunction) {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
 
-            const itemId = req.params.itemId;
+      const user = req.body.user;
 
-            const { currentAmount, minimumAmount } = req.body;
+      const itemId = req.params.itemId;
 
-            const updatedItem = await InventoryPrismaRepository.updateItem({
-                userId: user.id,
-                itemId,
-                currentAmount,
-                minimumAmount,
-            });
+      const { currentAmount, minimumAmount } = req.body;
 
-            if (!updatedItem)
-                throw new Error(
-                    "Something went wrong while updating the item."
-                );
+      const updatedItem = await InventoryPrismaRepository.updateItem({
+        userId: user.id,
+        itemId,
+        currentAmount,
+        minimumAmount,
+      });
 
-            return res.status(200).json({ success: true, updatedItem });
-        } catch (error) {
-            next(error);
-        }
+      if (!updatedItem)
+        throw new Error("Something went wrong while updating the item.");
+
+      return res.status(200).json({ success: true, updatedItem });
+    } catch (error) {
+      next(error);
     }
+  }
 
-    async deleteItem(req: Request, res: Response, next: NextFunction) {
-        try {
-            const user = req.body.user;
+  async deleteItem(req: Request, res: Response, next: NextFunction) {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
 
-            const { itemId } = req.body;
+      const user = req.body.user;
 
-            const deletedItem = await InventoryPrismaRepository.deleteItem(
-                user.id,
-                itemId
-            );
+      const { itemId } = req.body;
 
-            if (!deletedItem)
-                throw new Error(
-                    "Something went wrong while deleting the item."
-                );
+      const deletedItem = await InventoryPrismaRepository.deleteItem(
+        user.id,
+        itemId
+      );
 
-            return res.status(200).json({ success: true, deletedItem });
-        } catch (error) {
-            next(error);
-        }
+      if (!deletedItem)
+        throw new Error("Something went wrong while deleting the item.");
+
+      return res.status(200).json({ success: true, deletedItem });
+    } catch (error) {
+      next(error);
     }
+  }
 }
 
 export default InventoryController;

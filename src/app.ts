@@ -8,6 +8,7 @@ import signUpRouter from "./routes/signUpRouter";
 import inventoryRouter from "./routes/inventoryRouter";
 import AuthMiddleware from "./middleware/AuthMiddleware";
 import listsRouter from "./routes/listsRouter";
+import profileRouter from "./routes/profileRouter";
 
 dotenv.config();
 
@@ -26,6 +27,10 @@ app.use("/api/signup", signUpRouter);
 app.use("/api/lists", AuthMiddleware, listsRouter)
 
 app.use("/api/inventory", AuthMiddleware, inventoryRouter);
+
+app.use("/api/profile", AuthMiddleware, profileRouter)
+
+
 
 // handle all routes and methods that are not defined in the application
 app.use(notFoundHandler);

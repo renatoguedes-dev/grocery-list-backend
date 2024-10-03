@@ -29,8 +29,6 @@ class UserPrismaRepository {
                 },
             });
 
-            console.log(createdUser);
-
             return createdUser;
         } catch (error) {
             throw new InvalidDataError("Email already registered.");

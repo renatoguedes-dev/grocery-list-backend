@@ -14,9 +14,6 @@ class InventoryPrismaRepository {
             },
         });
 
-        console.log("this is the itemAdded:");
-        console.log(itemAdded);
-
         return itemAdded;
     }
 
@@ -29,9 +26,6 @@ class InventoryPrismaRepository {
                 createdAt: "asc",
             },
         });
-
-        console.log("this is the userInventory:");
-        console.log(userInventory);
 
         return userInventory;
     }
@@ -48,9 +42,6 @@ class InventoryPrismaRepository {
             },
         });
 
-        console.log("this is the updatedItem:");
-        console.log(updatedItem);
-
         return updatedItem;
     }
 
@@ -61,9 +52,6 @@ class InventoryPrismaRepository {
                 id: itemId,
             },
         });
-
-        console.log("this is the deletedItem:");
-        console.log(deletedItem);
 
         return deletedItem;
     }
