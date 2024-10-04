@@ -6,34 +6,50 @@ import { CreateUserDto } from "../../models/User";
 const prisma = new PrismaClient();
 
 class UserPrismaRepository {
-    async findByEmail(email: string): Promise<User | null> {
-        const userFound = await prisma.user.findFirst({
-            where: {
-                email: email,
-            },
-        });
+  async findByEmail(email: string): Promise<User | null> {
+    const userFound = await prisma.user.findFirst({
+      where: {
+        email: email,
+      },
+    });
 
-        return userFound;
+    return userFound;
+  }
+
+  async createUser(
+    userData: CreateUserDto,
+    hashedPassword: string
+  ): Promise<User> {
+    try {
+      const createdUser = await prisma.user.create({
+        data: {
+          name: userData.name,
+          email: userData.email,
+          password: hashedPassword,
+        },
+      });
+
+      return createdUser;
+    } catch (error) {
+      throw new InvalidDataError("Email already registered.");
     }
+  }
 
-    async createUser(
-        userData: CreateUserDto,
-        hashedPassword: string
-    ): Promise<User> {
-        try {
-            const createdUser = await prisma.user.create({
-                data: {
-                    name: userData.name,
-                    email: userData.email,
-                    password: hashedPassword,
-                },
-            });
+  async changePassword(userId: string, email: string, newPassword: string) {
+    const createdPassword = await prisma.user.update({
+      where: {
+        id: userId,
+        email,
+      },
+      data: {
+        password: newPassword,
+      },
+    });
 
-            return createdUser;
-        } catch (error) {
-            throw new InvalidDataError("Email already registered.");
-        }
-    }
+    if (!createdPassword) return false;
+
+    return true;
+  }
 }
 
 export default new UserPrismaRepository();
