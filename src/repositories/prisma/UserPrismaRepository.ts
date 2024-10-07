@@ -1,13 +1,11 @@
-import { PrismaClient } from "@prisma/client";
 import { User } from "@prisma/client";
 import InvalidDataError from "../../errors/InvalidDataError";
 import { CreateUserDto } from "../../models/User";
-
-const prisma = new PrismaClient();
+import { PrismaInstanceFactory } from "../../factories/PrismaInstanceFactory";
 
 class UserPrismaRepository {
   async findByEmail(email: string): Promise<User | null> {
-    const userFound = await prisma.user.findFirst({
+    const userFound = await PrismaInstanceFactory.user.findFirst({
       where: {
         email: email,
       },
@@ -16,16 +14,13 @@ class UserPrismaRepository {
     return userFound;
   }
 
-  async createUser(
-    userData: CreateUserDto,
-    hashedPassword: string
-  ): Promise<User> {
+  async createUser(userData: CreateUserDto): Promise<User> {
     try {
-      const createdUser = await prisma.user.create({
+      const createdUser = await PrismaInstanceFactory.user.create({
         data: {
           name: userData.name,
           email: userData.email,
-          password: hashedPassword,
+          password: userData.password,
         },
       });
 
@@ -36,7 +31,7 @@ class UserPrismaRepository {
   }
 
   async changePassword(userId: string, email: string, newPassword: string) {
-    const createdPassword = await prisma.user.update({
+    const createdPassword = await PrismaInstanceFactory.user.update({
       where: {
         id: userId,
         email,

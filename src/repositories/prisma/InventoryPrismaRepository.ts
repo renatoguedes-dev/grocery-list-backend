@@ -1,60 +1,58 @@
-import { PrismaClient } from "@prisma/client";
 import { InventoryDto, InventoryUpdate } from "../../models/Inventory";
-
-const prisma = new PrismaClient();
+import { PrismaInstanceFactory } from "../../factories/PrismaInstanceFactory";
 
 class InventoryPrismaRepository {
-    async addItem(newItem: InventoryDto) {
-        const itemAdded = await prisma.inventory.create({
-            data: {
-                userId: newItem.userId,
-                item: newItem.item,
-                currentAmount: newItem.currentAmount,
-                minimumAmount: newItem.minimumAmount,
-            },
-        });
+  async addItem(newItem: InventoryDto) {
+    const itemAdded = await PrismaInstanceFactory.inventory.create({
+      data: {
+        userId: newItem.userId,
+        item: newItem.item,
+        currentAmount: newItem.currentAmount,
+        minimumAmount: newItem.minimumAmount,
+      },
+    });
 
-        return itemAdded;
-    }
+    return itemAdded;
+  }
 
-    async getUserInventory(userId: string) {
-        const userInventory = await prisma.inventory.findMany({
-            where: {
-                userId,
-            },
-            orderBy: {
-                createdAt: "asc",
-            },
-        });
+  async getUserInventory(userId: string) {
+    const userInventory = await PrismaInstanceFactory.inventory.findMany({
+      where: {
+        userId,
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
 
-        return userInventory;
-    }
+    return userInventory;
+  }
 
-    async updateItem(updatedData: InventoryUpdate) {
-        const updatedItem = await prisma.inventory.update({
-            where: {
-                userId: updatedData.userId,
-                id: updatedData.itemId,
-            },
-            data: {
-                currentAmount: updatedData.currentAmount,
-                minimumAmount: updatedData.minimumAmount,
-            },
-        });
+  async updateItem(updatedData: InventoryUpdate) {
+    const updatedItem = await PrismaInstanceFactory.inventory.update({
+      where: {
+        userId: updatedData.userId,
+        id: updatedData.itemId,
+      },
+      data: {
+        currentAmount: updatedData.currentAmount,
+        minimumAmount: updatedData.minimumAmount,
+      },
+    });
 
-        return updatedItem;
-    }
+    return updatedItem;
+  }
 
-    async deleteItem(userId: string, itemId: string) {
-        const deletedItem = await prisma.inventory.delete({
-            where: {
-                userId,
-                id: itemId,
-            },
-        });
+  async deleteItem(userId: string, itemId: string) {
+    const deletedItem = await PrismaInstanceFactory.inventory.delete({
+      where: {
+        userId,
+        id: itemId,
+      },
+    });
 
-        return deletedItem;
-    }
+    return deletedItem;
+  }
 }
 
 export default new InventoryPrismaRepository();

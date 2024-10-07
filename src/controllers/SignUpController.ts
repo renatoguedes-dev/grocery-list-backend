@@ -2,8 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import UserService from "../services/UserService";
 import ValidationErrorResponse from "../errors/ValidationErrorResponse";
-import UserAlreadyExists from "../errors/UserAlreadyExists";
-import { createJWT } from "../services/helpers/JWTHelper";
 
 class SignUpController {
   async processSignUp(req: Request, res: Response, next: NextFunction) {
@@ -17,37 +15,17 @@ class SignUpController {
         );
       }
 
-      const { name, email, password, confirmPassword } = req.body;
-
-      const existingUser = await UserService.findByEmail(email);
-
-      if (existingUser?.email) {
-        throw new UserAlreadyExists("E-mail already registered.");
-      }
-
-      if (password !== confirmPassword) {
+      if (req.body.password !== req.body.confirmPassword) {
         return res.status(400).json({ message: "Passwords do not match." });
       }
 
+      const { name, email, password } = req.body;
+
       const userData = { name, email, password };
 
-      const createdUser = await UserService.createUser(userData);
+      const result = await UserService.createUser(userData);
 
-      if (!createdUser) {
-        return res.status(400).json({ message: "Email already registered." });
-      }
-
-      const userSafeData = {
-        id: createdUser.id,
-        name: createdUser.name,
-        email: createdUser.email,
-      };
-
-      const token = createJWT(userSafeData);
-
-      return res.status(201).json({
-        token,
-      });
+      return res.status(201).json(result);
     } catch (error) {
       next(error);
     }
