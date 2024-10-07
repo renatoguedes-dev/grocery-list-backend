@@ -5,6 +5,13 @@ import { comparePassword } from "./helpers/BcryptHelper";
 import InvalidOldPassword from "../errors/InvalidOldPassword";
 import UserAlreadyExists from "../errors/UserAlreadyExists";
 import { createJWT } from "./helpers/JWTHelper";
+import NotFoundError from "../errors/NotFoundError";
+
+interface IChangePassword {
+  user: User;
+  oldPassword: string;
+  newPassword: string;
+}
 
 const saltRounds = 12;
 
@@ -41,8 +48,19 @@ class UserService {
     return { token };
   }
 
-  async changePassword(user: User, oldPassword: string, newPassword: string) {
-    const comparisonResult = await comparePassword(oldPassword, user.password);
+  async changePassword(data: IChangePassword) {
+    const { user, oldPassword, newPassword } = data;
+
+    const foundUser = await this.findByEmail(user.email);
+
+    if (!foundUser) {
+      throw new NotFoundError("User not found.");
+    }
+
+    const comparisonResult = await comparePassword(
+      oldPassword,
+      foundUser.password
+    );
 
     if (!comparisonResult) {
       throw new InvalidOldPassword("Invalid old password!");
@@ -50,11 +68,13 @@ class UserService {
 
     const newHashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
-    return await UserPrismaRepository.changePassword(
+    const passwordChanged = await UserPrismaRepository.changePassword(
       user.id,
       user.email,
       newHashedPassword
     );
+
+    return passwordChanged;
   }
 }
 
