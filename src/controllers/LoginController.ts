@@ -1,54 +1,28 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import InvalidDataError from "../errors/InvalidDataError";
-import UserService from "../services/UserService";
-import { comparePassword } from "../services/helpers/BcryptHelper";
-import { createJWT } from "../services/helpers/JWTHelper";
+import LoginService from "../services/LoginService";
 
 class LoginController {
-    async processLogin(req: Request, res: Response, next: NextFunction) {
-        try {
-            // Check if there were validation errors in express-validator
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() });
-            }
+  async processLogin(req: Request, res: Response, next: NextFunction) {
+    try {
+      // Check if there were validation errors in express-validator
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
 
-            const { email, password } = req.body;
+      if (!req.body.email || !req.body.password) {
+        throw new InvalidDataError("E-mail e/or Password are required!");
+      }
 
-            if (!email || !password) {
-                throw new InvalidDataError(
-                    "E-mail e/or Password are required!"
-                );
-            }
+      const result = await LoginService.execute(req.body);
 
-            const clientData = await UserService.findByEmail(email);
-
-            if (!clientData) throw new Error("Invalid e-mail and/or password!");
-
-            const comparisonResult = await comparePassword(
-                password,
-                clientData.password
-            );
-
-            if (!comparisonResult)
-                throw new Error("Invalid e-mail and/or password!");
-
-            const userSafeData = {
-                id: clientData.id,
-                name: clientData.name,
-                email: clientData.email,
-            };
-
-            const token = createJWT(userSafeData);
-
-            return res.status(200).json({
-                token,
-            });
-        } catch (error) {
-            next(error);
-        }
+      return res.status(200).json(result);
+    } catch (error) {
+      next(error);
     }
+  }
 }
 
 export default LoginController;
