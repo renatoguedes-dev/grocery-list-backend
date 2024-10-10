@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import ListPrismaRepository from "../repositories/prisma/ListPrismaRepository";
 import { validationResult } from "express-validator";
+import ListItemPrismaRepository from "../repositories/prisma/ListItemPrismaRepository";
 
 class ListsController {
   async getUserCustomLists(req: Request, res: Response, next: NextFunction) {
@@ -57,6 +58,56 @@ class ListsController {
       };
 
       return res.status(200).json({ requestedList: listSafeData });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteList(req: Request, res: Response, next: NextFunction) {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
+      const { id, user } = req.body;
+
+      await ListPrismaRepository.deleteList(user.id, id);
+
+      return res.status(200).json({ success: true, message: "List deleted." });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getListItems(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+
+      const listItems = await ListItemPrismaRepository.getItems(id);
+
+      return res.status(200).json(listItems);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async addListItem(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+
+      const { name, amount } = req.body;
+
+      const itemAdded = await ListItemPrismaRepository.addItem(
+        id,
+        name,
+        amount
+      );
+
+      if (!itemAdded)
+        throw new Error("Something went wrong while adding the new item.");
+
+      return res.status(200).json({ success: true, itemAdded });
     } catch (error) {
       next(error);
     }

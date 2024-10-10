@@ -1,10 +1,8 @@
 import { body, param } from "express-validator";
 
 export const validateAddCustomList = [
-  // Validate and sanitize name
-  body("name").trim().notEmpty().withMessage("Please provide the list's name."),
+  body("name").trim().notEmpty().withMessage("Please provide the list name."),
 
-  // validate and sanitize date
   body("date")
     .trim()
     .isISO8601()
@@ -19,4 +17,30 @@ export const validateGetListById = [
     .withMessage("ID cannot be empty")
     .isUUID()
     .withMessage("ID must be a valid UUID"),
+];
+
+export const validateDeleteList = [
+  body("id")
+    .trim()
+    .notEmpty()
+    .withMessage("ID cannot be empty")
+    .isUUID()
+    .withMessage("ID must be a valid UUID"),
+];
+
+export const validateAddListItem = [
+  param("id")
+    .trim()
+    .notEmpty()
+    .withMessage("ID cannot be empty")
+    .isUUID()
+    .withMessage("ID must be a valid UUID"),
+
+  body("name").trim().notEmpty().withMessage("Please provide the item name."),
+
+  body("amount")
+    .notEmpty()
+    .withMessage("Please provide the amount.")
+    .isInt({ min: 0 })
+    .withMessage("amount must be a positive integer or 0"),
 ];

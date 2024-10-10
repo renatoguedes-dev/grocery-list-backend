@@ -10,6 +10,9 @@ class ListPrismaRepository {
       orderBy: {
         createdAt: "asc",
       },
+      include: {
+        listItems: true,
+      },
     });
 
     return userLists;
