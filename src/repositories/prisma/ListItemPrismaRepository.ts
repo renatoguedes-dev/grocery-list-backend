@@ -14,10 +14,25 @@ class ListItemPrismaRepository {
         listId: true,
         name: true,
         amount: true,
+        complete: true,
       },
     });
 
     return listItems;
+  }
+
+  async updateCompleteStatus(listId: string, id: string, complete: boolean) {
+    const updatedItem = await PrismaInstanceFactory.listItem.update({
+      where: {
+        listId,
+        id,
+      },
+      data: {
+        complete,
+      },
+    });
+
+    return updatedItem;
   }
 
   async addItem(listId: string, name: string, amount: number) {
@@ -30,6 +45,17 @@ class ListItemPrismaRepository {
     });
 
     return itemAdded;
+  }
+
+  async deleteItem(listId: string, id: string) {
+    const deletedListItem = await PrismaInstanceFactory.listItem.delete({
+      where: {
+        listId,
+        id,
+      },
+    });
+
+    return deletedListItem;
   }
 }
 

@@ -4,8 +4,11 @@ import {
   validateAddCustomList,
   validateAddListItem,
   validateDeleteList,
+  validateDeleteListItem,
   validateGetListById,
-} from "../validators/listsValidator";
+  validateGetListItems,
+  validateUpdateCompleteStatus,
+} from "../schemas/listsValidator";
 
 const listsRouter = Router();
 
@@ -16,6 +19,20 @@ listsRouter.post("/", validateAddCustomList, listsController.addCustomList);
 listsRouter.get("/:id", validateGetListById, listsController.getListById);
 listsRouter.post("/:id", validateAddListItem, listsController.addListItem);
 listsRouter.delete("/", validateDeleteList, listsController.deleteList);
-listsRouter.get("/:id/list_items", listsController.getListItems)
+listsRouter.get(
+  "/:id/list_items",
+  validateGetListItems,
+  listsController.getListItems
+);
+listsRouter.post(
+  "/:listId/:id",
+  validateUpdateCompleteStatus,
+  listsController.updateCompleteStatus
+);
+listsRouter.delete(
+  "/:listId/:id",
+  validateDeleteListItem,
+  listsController.deleteListItem
+);
 
 export default listsRouter;

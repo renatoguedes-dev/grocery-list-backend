@@ -59,7 +59,7 @@ model ListItem {
   listId    String   @map("list_id")
   name      String
   amount    Int
-  active    Boolean  @default(true)
+  complete  Boolean  @default(false)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 

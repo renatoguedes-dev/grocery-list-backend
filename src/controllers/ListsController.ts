@@ -112,6 +112,46 @@ class ListsController {
       next(error);
     }
   }
+
+  async updateCompleteStatus(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { listId, id } = req.params;
+      const { complete } = req.body;
+
+      const updatedItem = await ListItemPrismaRepository.updateCompleteStatus(
+        listId,
+        id,
+        complete
+      );
+
+      if (!updatedItem)
+        throw new Error("Something went wrong while updating the item.");
+
+      return res.status(200).json({ success: true });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteListItem(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { listId, id } = req.params;
+
+      const deletedListItem = await ListItemPrismaRepository.deleteItem(
+        listId,
+        id
+      );
+
+      
+
+      if (!deletedListItem)
+        throw new Error("Something went wrong while deleting the item.");
+
+      return res.status(200).json({ success: true });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default ListsController;

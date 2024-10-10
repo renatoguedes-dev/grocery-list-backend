@@ -1,6 +1,6 @@
 import { Router } from "express";
 import SignUpController from "../controllers/SignUpController";
-import validateSignUp from "../validators/signUpValidator";
+import validateSignUp from "../schemas/signUpValidator";
 
 const signUpController = new SignUpController();
 

@@ -44,3 +44,46 @@ export const validateAddListItem = [
     .isInt({ min: 0 })
     .withMessage("amount must be a positive integer or 0"),
 ];
+
+export const validateGetListItems = [
+  param("id")
+    .trim()
+    .notEmpty()
+    .withMessage("ID cannot be empty")
+    .isUUID()
+    .withMessage("ID must be a valid UUID"),
+];
+
+export const validateUpdateCompleteStatus = [
+  param("listId")
+    .trim()
+    .notEmpty()
+    .withMessage("listId cannot be empty")
+    .isUUID()
+    .withMessage("ID must be a valid UUID"),
+
+  param("id")
+    .trim()
+    .notEmpty()
+    .withMessage("ID cannot be empty")
+    .isUUID()
+    .withMessage("ID must be a valid UUID"),
+
+  body("complete").isBoolean().withMessage("complete has to be boolean."),
+];
+
+export const validateDeleteListItem = [
+  param("listId")
+    .trim()
+    .notEmpty()
+    .withMessage("listId cannot be empty")
+    .isUUID()
+    .withMessage("ID must be a valid UUID"),
+
+  param("id")
+    .trim()
+    .notEmpty()
+    .withMessage("ID cannot be empty")
+    .isUUID()
+    .withMessage("ID must be a valid UUID"),
+];
