@@ -1,5 +1,5 @@
 import InvalidDataError from "../../errors/InvalidDataError";
-import { CreateUserDto, User } from "../../models/tempUser";
+import { CreateUserDto, User } from "../../models/User";
 import { PrismaInstanceFactory } from "../../factories/PrismaInstanceFactory";
 
 class UserPrismaRepository {

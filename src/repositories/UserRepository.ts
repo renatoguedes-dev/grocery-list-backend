@@ -1,5 +1,5 @@
 import db from "./database";
-import { CreateUserDto, User } from "../models/tempUser";
+import { CreateUserDto, User } from "../models/User";
 import InvalidDataError from "../errors/InvalidDataError";
 
 class UserRepository {

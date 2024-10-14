@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { UserSafeData } from "../../models/tempUser";
+import { UserSafeData } from "../../models/User";
 import InvalidJWT from "../../errors/InvalidJWT";
 
 dotenv.config();
