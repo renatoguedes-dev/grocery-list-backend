@@ -6,7 +6,7 @@
     "start": "node dist/app.js",
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
     "build": "tsc",
-    "render-build": "npm install && npm run build"
+    "render-build": "npm install && npx prisma generate && npm run build"
   },
   "dependencies": {
     "@prisma/client": "^5.20.0",
