@@ -1,6 +1,5 @@
-import { User } from "@prisma/client";
 import InvalidDataError from "../../errors/InvalidDataError";
-import { CreateUserDto } from "../../models/User";
+import { CreateUserDto, User } from "../../models/User";
 import { PrismaInstanceFactory } from "../../factories/PrismaInstanceFactory";
 
 class UserPrismaRepository {

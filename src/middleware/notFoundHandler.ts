@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-const notFoundHandler = (req: Request, res: Response) => {
+const NotFoundHandler = (req: Request, res: Response) => {
     res.status(404).json({
         status: "Error",
         message: "Page not found",
@@ -8,4 +8,4 @@ const notFoundHandler = (req: Request, res: Response) => {
     });
 };
 
-export default notFoundHandler;
+export default NotFoundHandler;

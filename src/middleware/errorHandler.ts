@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import ValidationErrorResponse from "../errors/ValidationErrorResponse";
 
 // Centralized error handling function
-const errorHandler = (
+const ErrorHandler = (
     err: any,
     req: Request,
     res: Response,
@@ -29,4 +29,4 @@ const errorHandler = (
     });
 };
 
-export default errorHandler;
+export default ErrorHandler;
