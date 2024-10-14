@@ -1,4 +1,4 @@
-import { CreateUserDto, User } from "../models/User";
+import { CreateUserDto, User } from "../models/tempUser";
 import UserPrismaRepository from "../repositories/prisma/UserPrismaRepository";
 import bcrypt from "bcryptjs";
 import { comparePassword } from "./helpers/BcryptHelper";
