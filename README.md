@@ -29,6 +29,10 @@ This is the backend for a Grocery List application, providing APIs for user auth
 - **Error Handling**: Centralized error handling middleware.
 - **Security**: Implementation of security best practices using Helmet.
 
+## Deployment
+
+The full project is deployed using Netlify, Render and Neon. You can view the live demo [here](https://grocery-planner.netlify.app/).
+
 ## Project Structure
 
 - `src/app.ts`: Main application file
