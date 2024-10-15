@@ -1,7 +1,7 @@
 import { body, param } from "express-validator";
 
 export const validateAddCustomList = [
-  body("name").trim().notEmpty().withMessage("Please provide the list name."),
+  body("name").trim().isLength({ min: 2, max: 50 }).withMessage("Please provide a valid list name."),
 
   body("date")
     .trim()
@@ -41,8 +41,8 @@ export const validateAddListItem = [
   body("amount")
     .notEmpty()
     .withMessage("Please provide the amount.")
-    .isInt({ min: 0 })
-    .withMessage("amount must be a positive integer or 0"),
+    .isInt({ min: 0, max: 99999 })
+    .withMessage("amount must be between 0 and 99999"),
 ];
 
 export const validateGetListItems = [

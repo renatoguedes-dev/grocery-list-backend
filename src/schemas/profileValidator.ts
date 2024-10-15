@@ -5,14 +5,14 @@ const validateProfile = [
     body("oldPassword")
         .trim()
         .isLength({ min: 8, max: 60 })
-        .withMessage("Password must be at least 8 characters long")
+        .withMessage("Password must have between 8 and 60 characters.")
         .escape(),
 
     // validate and sanitize password
     body("newPassword")
         .trim()
         .isLength({ min: 8, max: 60 })
-        .withMessage("Password must be at least 8 characters long")
+        .withMessage("Password must have between 8 and 60 characters.")
         .escape(),
 ];
 

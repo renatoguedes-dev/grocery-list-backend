@@ -2,20 +2,20 @@ import { body, param } from "express-validator";
 
 export const validateAddItem = [
   // Validate and sanitize name
-  body("item").trim().notEmpty().withMessage("Please provide the item."),
+  body("item").trim().isLength({ min: 2, max: 50 }).withMessage("Please provide a valid item name."),
 
   // validate and sanitize date
   body("currentAmount")
     .notEmpty()
     .withMessage("Please provide the current amount.")
-    .isInt({ min: 0 })
-    .withMessage("currentAmount must be a positive integer or 0"),
+    .isInt({ min: 0, max: 99999 })
+    .withMessage("currentAmount must be between 0 and 99999"),
 
   body("minimumAmount")
     .notEmpty()
     .withMessage("Please provide the minimum amount.")
-    .isInt({ min: 0 })
-    .withMessage("minimumAmount must be a positive integer or 0"),
+    .isInt({ min: 0, max: 99999 })
+    .withMessage("minimumAmount must be between 0 and 99999"),
 ];
 
 export const validateUpdateItem = [
@@ -29,14 +29,14 @@ export const validateUpdateItem = [
   body("currentAmount")
     .notEmpty()
     .withMessage("Please provide the current amount.")
-    .isInt({ min: 0 })
-    .withMessage("currentAmount must be a positive integer or 0"),
+    .isInt({ min: 0, max: 99999 })
+    .withMessage("currentAmount must be between 0 and 99999"),
 
   body("minimumAmount")
     .notEmpty()
     .withMessage("Please provide the minimum amount.")
-    .isInt({ min: 0 })
-    .withMessage("minimumAmount must be a positive integer or 0"),
+    .isInt({ min: 0, max: 99999 })
+    .withMessage("minimumAmount must be between 0 and 99999"),
 ];
 
 export const validateDeleteItem = [

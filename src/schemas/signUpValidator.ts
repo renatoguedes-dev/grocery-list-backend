@@ -4,7 +4,7 @@ const validateSignUp = [
     // Validate and sanitize name
     body("name")
         .trim()
-        .isLength({ min: 2 })
+        .isLength({ min: 2, max: 50 })
         .matches(/^[a-zA-ZÀ-ÖØ-öø-ÿ\s'-]+$/)
         .withMessage("Name must only contain letters.")
         .escape(),
@@ -22,7 +22,7 @@ const validateSignUp = [
     body("password")
         .trim()
         .isLength({ min: 8, max: 60 })
-        .withMessage("Password must be at least 8 characters long.")
+        .withMessage("Password must have between 8 and 60 characters.")
         .escape(),
 
     // Validate confirm password to ensure it matches the password
