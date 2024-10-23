@@ -14,7 +14,8 @@ class LoginService {
 
     const userFound = await UserService.findByEmail(email);
 
-    if (!userFound) throw new InvalidEmailPassword("Invalid e-mail and/or password!");
+    if (!userFound)
+      throw new InvalidEmailPassword("Invalid e-mail and/or password!");
 
     const comparisonResult = await comparePassword(
       password,
@@ -22,6 +23,23 @@ class LoginService {
     );
 
     if (!comparisonResult)
+      throw new InvalidEmailPassword("Invalid e-mail and/or password!!");
+
+    const userSafeData = {
+      id: userFound.id,
+      name: userFound.name,
+      email: userFound.email,
+    };
+
+    const token = createJWT(userSafeData);
+
+    return { token };
+  }
+
+  async loginAfterPasswordReset(email: string, newHashedPassword: string) {
+    const userFound = await UserService.findByEmail(email);
+
+    if (!userFound)
       throw new InvalidEmailPassword("Invalid e-mail and/or password!");
 
     const userSafeData = {

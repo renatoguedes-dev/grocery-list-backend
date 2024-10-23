@@ -4,8 +4,15 @@ import bcrypt from "bcryptjs";
 import { comparePassword } from "./helpers/BcryptHelper";
 import InvalidOldPassword from "../errors/InvalidOldPassword";
 import UserAlreadyExists from "../errors/UserAlreadyExists";
-import { createJWT } from "./helpers/JWTHelper";
+import { createJWT, createTemporaryJWT, verifyJWT } from "./helpers/JWTHelper";
 import NotFoundError from "../errors/NotFoundError";
+import InvalidEmailPassword from "../errors/InvalidEmailPassword";
+import EmailService from "./EmailService";
+import { tokensGenerated, tokensUsed } from "../repositories/Tokens";
+import ValidateResetPasswordToken from "./helpers/ValidateResetPasswordToken";
+import InvalidJWT from "../errors/InvalidJWT";
+import LoginService from "./LoginService";
+import ErrorChangingPassword from "../errors/ErrorChangingPassword";
 
 interface IChangePassword {
   user: User;
@@ -75,6 +82,57 @@ class UserService {
     );
 
     return passwordChanged;
+  }
+
+  async handleResetPasswordRequest(userEmail: string) {
+    const userFound = await this.findByEmail(userEmail);
+
+    if (!userFound) throw new InvalidEmailPassword("E-mail not found!");
+
+    const userSafeData = {
+      id: userFound.id,
+      name: userFound.name,
+      email: userFound.email,
+    };
+
+    const token = createTemporaryJWT(userSafeData);
+
+    // add new temporary token to the generated tokens array to check
+    // when user access the link
+    tokensGenerated.push(token);
+
+    return EmailService.sendPasswordResetEmail(token, userSafeData.email);
+  }
+
+  async resetPassword(token: string, password: string) {
+    const validateToken = ValidateResetPasswordToken(token);
+
+    if (!validateToken) throw new InvalidJWT("Invalid or expired token.");
+
+    const decodedToken = verifyJWT(token);
+
+    if (typeof decodedToken === "string") {
+      throw new InvalidJWT("Invalid or expired token.");
+    }
+
+    const { id, email } = decodedToken;
+
+    const newHashedPassword = await bcrypt.hash(password, saltRounds);
+
+    const passwordChanged = await UserPrismaRepository.changePassword(
+      id,
+      email,
+      newHashedPassword
+    );
+
+    if (!passwordChanged)
+      throw new ErrorChangingPassword(
+        "An error occurred while changing the password."
+      );
+
+    tokensUsed.push(token);
+
+    return await LoginService.loginAfterPasswordReset(email, newHashedPassword);
   }
 }
 

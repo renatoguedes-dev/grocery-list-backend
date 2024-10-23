@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import InvalidDataError from "../errors/InvalidDataError";
 import LoginService from "../services/LoginService";
+import ValidationErrorResponse from "../errors/ValidationErrorResponse";
 
 class LoginController {
   async processLogin(req: Request, res: Response, next: NextFunction) {
@@ -9,7 +10,10 @@ class LoginController {
       // Check if there were validation errors in express-validator
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        throw new ValidationErrorResponse(
+          "Validation failed. Check the input fields.",
+          errors.array()
+        );
       }
 
       if (!req.body.email || !req.body.password) {

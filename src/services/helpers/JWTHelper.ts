@@ -14,6 +14,13 @@ export const createJWT = (payload: UserSafeData) => {
   return jwt.sign(payload, secret);
 };
 
+export const createTemporaryJWT = (payload: UserSafeData) => {
+  if (!secret)
+    throw new Error("JWT_SECRET is not defined in the environment variables.");
+
+  return jwt.sign(payload, secret, {expiresIn: "15d"})
+};
+
 export const verifyJWT = (token: string) => {
   if (!secret)
     throw new Error("JWT_SECRET is not defined in the environment variables.");

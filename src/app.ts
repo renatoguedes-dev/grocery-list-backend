@@ -11,6 +11,7 @@ import listsRouter from "./routes/listsRouter";
 import profileRouter from "./routes/profileRouter";
 import helmet from "helmet";
 import startRouter from "./routes/startRouter";
+import resetPasswordRouter from "./routes/resetPasswordRouter";
 
 dotenv.config();
 
@@ -28,6 +29,8 @@ app.use("/api", startRouter)
 app.use("/api/login", loginRouter);
 
 app.use("/api/signup", signUpRouter);
+
+app.use("/api/reset-password", resetPasswordRouter)
 
 app.use("/api/lists", AuthMiddleware, listsRouter);
 

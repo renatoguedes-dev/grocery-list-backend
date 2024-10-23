@@ -4,7 +4,7 @@ import { PrismaInstanceFactory } from "../../factories/PrismaInstanceFactory";
 
 class UserPrismaRepository {
   async findByEmail(email: string): Promise<User | null> {
-    const userFound = await PrismaInstanceFactory.user.findFirst({
+    const userFound = await PrismaInstanceFactory.user.findUnique({
       where: {
         email: email,
       },
