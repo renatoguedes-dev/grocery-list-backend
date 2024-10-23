@@ -2,7 +2,8 @@ import { Router } from "express";
 import ResetPasswordController from "../controllers/ResetPasswordController";
 import {
   validateGetResetPassword,
-  validateResetPassword,
+  validatePostResetPassword,
+  validateResetPasswordSendEmail,
 } from "../schemas/resetPasswordValidator";
 
 const resetPasswordController = new ResetPasswordController();
@@ -11,7 +12,7 @@ const resetPasswordRouter = Router();
 
 resetPasswordRouter.post(
   "/",
-  validateResetPassword,
+  validateResetPasswordSendEmail,
   resetPasswordController.sendEmail
 );
 
@@ -23,7 +24,7 @@ resetPasswordRouter.get(
 
 resetPasswordRouter.post(
   "/:token",
-  validateGetResetPassword,
+  validatePostResetPassword,
   resetPasswordController.resetPassword
 );
 

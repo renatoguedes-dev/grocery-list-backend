@@ -49,6 +49,15 @@ class ResetPasswordController {
 
   async resetPassword(req: Request, res: Response, next: NextFunction) {
     try {
+      // Check if there were validation errors in express-validator
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        throw new ValidationErrorResponse(
+          "Validation failed. Check the input fields.",
+          errors.array()
+        );
+      }
+
       const { token } = req.params;
       const { password, confirmPassword } = req.body;
 

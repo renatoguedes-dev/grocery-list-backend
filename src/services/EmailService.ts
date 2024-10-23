@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 
 class EmailService {
   async sendPasswordResetEmail(token: string, email: string) {
-    const resetLink = `http://localhost:5173/reset-password?token=${token}`;
+    const resetLink = `https://grocery-list-backend-x404.onrender.com/reset-password?token=${token}`;
 
     const mailOptions = {
       from: `Grocery Planner <${process.env.GMAIL_USERNAME}>`,
